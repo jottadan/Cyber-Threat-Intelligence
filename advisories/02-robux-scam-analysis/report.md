@@ -91,7 +91,7 @@ Isso comprova o modelo de negócio por trás do spam:
 ## Executive Summary
 This investigation analyzes a social engineering campaign disseminated through mass comments on the official Roblox game page within the Samsung Galaxy Store. The messages promise the free delivery of virtual currency (Robux) upon completion of tasks for three days and direct users to a shortened link (open.link/yHwnq).
 
-Technical analysis of the redirect chain demonstrated that the link does not lead to credential phishing pages or direct malware downloads, but rather to the official page of the "Macadam, The Step Counter" application on the Google Play Store. Inspection of the destination URL parameters revealed the use of the referrer parameter containing identifiers from the attribution platform *Adjust* (adjust_reftag), confirming that the operation aims at fraudulent monetization through affiliate programs based on *CPI (*Cost Per Install*)**.
+Technical analysis of the redirect chain demonstrated that the link does not lead to credential phishing pages or direct malware downloads, but rather to the official page of the "Macadam, The Step Counter" application on the Google Play Store. Inspection of the destination URL parameters revealed the use of the referrer parameter containing identifiers from the attribution platform *Adjust* (adjust_reftag), confirming that the operation aims at fraudulent monetization through affiliate programs based on **CPI (*Cost Per Install*)**.
 
 **Main finding:** The threat does not involve technical compromise of devices or account theft, but rather an advertising fraud campaign (ad fraud/affiliate abuse) sustained by social engineering targeting children and teenagers.
 
