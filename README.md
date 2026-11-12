@@ -11,7 +11,7 @@ O objetivo deste espaço é registrar investigações práticas sob uma ótica a
 ```text
 Cyber-Threat-Intelligence/
 ├── advisories/          # Relatórios técnicos e análises de ameaças
-└── README.md            # Visão geral e índice das investigações
+└── README.md            # Visão geral
 ```
 
 ---
