@@ -20,10 +20,10 @@ Em paralelo, foi reproduzido um cenário controlado de engenharia social dentro 
 
 **Implicação defensiva:** usuários não devem fornecer senhas ou códigos de autenticação em interfaces de experiências, mensagens ou supostos fluxos de moderação. Para confirmar a hipótese de campanha, são necessárias evidências adicionais dos relatos originais, do fluxo real de coleta e de eventuais URLs ou infraestruturas externas.
 
- # 1. O que está acontecendo? (O Contexto)
+## 1. O que está acontecendo? (O Contexto)
 Circulou nas redes sociais (como o TikTok) o alerta de que aceitar solicitações de amizade de determinados perfis no Roblox seria suficiente para perder o controle da conta. 
 
-Decidi investigar esse boicote: *será que um clique em "Aceitar amizade" realmente rouba dados, ou existe uma história de engenharia social por trás disso?*
+Decidi investigar esse boato: *será que um clique em "Aceitar amizade" realmente rouba dados, ou existe uma história de engenharia social por trás disso?*
 
 ---
 
@@ -33,7 +33,7 @@ Para responder à pergunta com dados reais e não apenas achismos, criei um ambi
 * *Conta B:* Atuou como a "vítima".
 
 *Testes executados:*
-1. Envio de solicitação de amizade (monitorando o tráfego gerado via Portswigger).
+1. Envio de solicitação de amizade (monitorando o tráfego gerado via Burp Suite).
 2. Ciclo de bloqueio e desbloqueio entre as contas.
 3. Conversas e interações via chat.
 4. Criação de uma *Prova de Conceito (PoC)* de uma interface de falsa verificação/moderação dentro de uma experiência controlada, testando se dados digitados pelo usuário chegam ao servidor via RemoteEvent. [PoC disponível aqui.](evidence.md)
@@ -44,14 +44,14 @@ Tudo com o foco de descobrir se realmente existe uma falha de segurança nativa 
 
 ## 3. O que eu descobri? (Achados Técnicos)
 * *Sobre a amizade e o chat:* O tráfego capturado mostrou apenas metadados básicos (nome de usuário, IDs). *Nenhum token de sessão ou credencial foi exposto* apenas por aceitar a amizade ou trocar mensagens. A alegação de comprometimento automático é, até onde pude investigar, falsa no escopo testado.
-* *Sobre a engenharia social (*A PoC):* Embora o clique na amizade seja inofensivo, a simulação provou que **é totalmente viável criar interfaces enganosas (*falsos avisos de moderação) dentro de um jogo** para induzir o usuário a digitar informações e enviá-las ao servidor da experiência (RemoteEvent).
+* *Sobre a engenharia social (A PoC):* Embora o clique na amizade seja inofensivo, a simulação provou que *é totalmente viável criar interfaces enganosas (falsos avisos de moderação) dentro de um jogo* para induzir o usuário a digitar informações e enviá-las ao servidor da experiência (`RemoteEvent`).
 
 > *Conclusão parcial:* Aceitar amizade não aparenta permitir acesso a dados sensíveis por si só. É comprovado que existe um vetor de risco que permite *engenharia social subsequente* (o golpista te convence a ir para um jogo falso e digitar seus dados lá), porém nos testes realizados não foi possível verificar se realmente é possível extrair credenciais reais para um servidor externo do Roblox.
 
 ---
 
 ## 4. Lições Defensivas
-* *Para jogadores:* Nunca insirir senhas ou códigos de segurança (2FA) em telas que aparecem dentro de jogos, por mais oficiais que pareçam. O Roblox nunca pede senha via pop-up de experiência.
+* *Para jogadores:* Nunca inserir senhas ou códigos de segurança (2FA) em telas que aparecem dentro de jogos, por mais oficiais que pareçam. O Roblox nunca pede senha via pop-up de experiência.
 * *Para analistas:* Sempre separar o mito da internet da realidade técnica. Relatos públicos muitas vezes misturam etapas (o contato inicial vs. o golpe real).
 
 ---
@@ -69,6 +69,6 @@ Two controlled accounts were used to observe traffic associated with friend requ
 
 In parallel, a controlled social engineering scenario was reproduced within a test experiment. The documentation describes a mock check/moderation interface, an input field, and the passing of a dummy value from the client to the experiment server via a RemoteEvent. The scenario demonstrates that a deceptive interface within an experience can request information and forward it to the controlled server. The documentation presented, however, does not in itself prove the collection of real credentials, the transmission to an external infrastructure or the effective compromise of a Roblox account.
 
-Main judgment: the tests described do not support the claim that accepting a friend request is, in itself, a direct commitment mechanism. Phishing mediated by social engineering is a plausible hypothesis to explain some reports, but the link between proof of concept (PoC) and real incidents remains unconfirmed.
+**Main judgment:** the tests described do not support the claim that accepting a friend request is, in itself, a direct compromise mechanism. Phishing mediated by social engineering is a plausible hypothesis to explain some reports, but the link between proof of concept (PoC) and real incidents remains unconfirmed.
 
-Defensive implication: Users should not provide passwords or authentication codes in experience interfaces, messages, or supposed moderation flows. To confirm the campaign hypothesis, additional evidence is needed from the original reports, the actual collection flow and any external URLs or infrastructures.
+**Defensive implication:** Users should not provide passwords or authentication codes in experience interfaces, messages, or supposed moderation flows. To confirm the campaign hypothesis, additional evidence is needed from the original reports, the actual collection flow and any external URLs or infrastructures.
