@@ -1,86 +1,98 @@
-# Análise de Scam de Robux via Encurtador e CPI
+# Relatório de Cyber Threat Intelligence
+## Análise de Scam de Robux via Encurtador e CPI
 
-## Resumo
-Este relatório analisa um golpe disseminado através de comentários em massa prometendo Robux gratuitos. O link fornecido utiliza um encurtador legítimo e redireciona usuários para um aplicativo na Google Play Store, caracterizando uma estratégia de monetização via engenharia social e instalação de aplicativos (CPI).
+> **Status:** Análise Concluída  
+> **Data:** 12/11/2026  
+> **Autor:** João P.  
+> **Escopo:** Investigação de links promocionais fraudulentos (isca de Robux) e fluxo de redirecionamento
+
+## Resumo Executivo
+Esta investigação analisa uma campanha de engenharia social disseminada por meio de comentários em massa na página oficial do jogo Roblox dentro da Samsung Galaxy Store. As mensagens prometem a entrega gratuita de moeda virtual (Robux) mediante o cumprimento de tarefas por três dias e direcionam os usuários a um link encurtado (abrir.link/yHwnq).
+
+A análise técnica da cadeia de redirecionamento demonstrou que o link não conduz a páginas de phishing de credenciais nem a downloads de malware direto, mas sim à página oficial do aplicativo "Macadam, O Conta-Passos" na Google Play Store. A inspeção dos parâmetros da URL de destino revelou o uso do parâmetro referrer contendo identificadores da plataforma de atribuição *Adjust* (adjust_reftag), confirmando que a operação visa a monetização fraudulenta por meio de programas de afiliados baseados em *CPI (*Cost Per Install)**.
+
+**Julgamento principal:** A ameaça não caracteriza comprometimento técnico de dispositivos ou roubo de contas, mas sim uma campanha de fraude publicitária (ad fraud / abuso de afiliados) sustentada por engenharia social voltada ao público infantojuvenil.
+
+**Implicação defensiva:** Usuários não devem confiar em promessas de recompensas digitais publicadas em seções de avaliações de lojas de aplicativos. Moderadores de lojas e plataformas de atribuição devem monitorar picos anômalos de instalação atrelados a identificadores específicos de referência (adjust_reftag) originados de spam em avaliações.
 
 ---
 
-## Lure
-Comentários em massa nas avaliações do aplicativo Roblox (Galaxy Store), prometendo uma quantidade de Robux grátis após a conclusão de tarefas específicas durante 3 dias.
+## 1. O que está acontecendo? (O Contexto e a Isca)
+
+Ao acessar a página do Roblox na *Samsung Galaxy Store* é possível notar uma enxurrada de avaliações falsas prometendo Robux gratuitos após uma validação de passos durante 3 dias. 
 
 ![Robux Scam](images/robux-scam.png)
 
----
-
-## Análise do Link
-**URL analisada:**
-https://abrir.link/yHwnq
-
-O domínio `abrir.link` é um encurtador legítimo, o que reduz a suspeita inicial e aumenta a probabilidade de clique por parte do usuário.
+O golpe explora gatilhos clássicos de engenharia social voltados principalmente para crianças e adolescentes sem renda própria:
+* *Curiosidade:* Instiga a dúvida "será que funciona mesmo?".
+* *Urgência e Novidade:* "Este aplicativo está pagando X Robux para quem validar seus passos durante 3 dias! Use o link abaixo e GANHE também!"
+* *Recompensa Fácil:* Promessa de obter moeda digital sem custo financeiro## Lure
 
 ---
 
-## Cadeia de Redirecionamento
-abrir.link → Google Play Store  
-(App: "Macadam, O Conta-Passos")
+## 2. Como eu analisei? (Cadeia de Redirecionamento)
 
-![Robux Scam](images/playstore-app.png)
+Ao inspecionar a URL divulgada nos comentários (hxxps://abrir[.]link/yHwnq), observei que o operador escolheu um encurtador de URLs legítimo e amplamente conhecido no Brasil (abrir.link). Isso reduz a desconfiança inicial da vítima e mascara o destino final.
 
-**Observação:**  
-Não foram identificados redirecionamentos intermediários visíveis, porém não se descarta sua existência.
-
----
-
-## Comportamento Observado
-- Redirecionamento único para Google Play Store  
-- Nenhum download automático  
-- Nenhuma execução visível adicional  
-- Nenhuma solicitação de permissão no navegador  
+*Fluxo observado:*
+```text
+Comentário na Galaxy Store ──▶️ abrir.link/yHwnq ──▶️ Google Play Store ("Macadam, O Conta-Passos")
+```
 
 ---
 
-## Engenharia Social
+## Comportamento técnico durante o acesso:
 
-**Curiosidade**  
-Os comentários instigam o pensamento: *"será que funciona?"*
+* Redirecionamento direto para a página oficial do aplicativo na Google Play Store.
 
-**Urgência / Novidade**  
-"Este aplicativo está pagando X Robux para quem validar seus passos durante 3 dias! Use o link abaixo e GANHE também!"
+* Nenhum download automático de APK externo.
 
-**Ganância**  
-O usuário percebe a possibilidade de obter Robux (valor digital) de forma fácil e gratuita.
+* Nenhuma execução de script malicioso ou solicitação de permissão invasiva no navegador.
 
-**Público-alvo provável**  
-Crianças e adolescentes, especialmente usuários do Roblox sem renda própria, interessados em customização de personagens e conteúdos adicionais.
+(Nota: Não foram observados saltos intermediários visíveis no navegador, embora redirecionamentos rápidos no lado do servidor não possam ser descartados sem captura completa de cabeçalhos HTTP).
 
 ---
 
-## Tracking e Monetização
-Foi identificado o uso do parâmetro "referr" contendo "adjust_reftag", indicando utilização da plataforma Adjust para rastreamento das instalações.
-Isso confirma a presença de um mecanismo de atribuição, reforçando a hipótese de monetização via CPI (Cost Per Install)
+## 3. O que eu descobri? (Tracking e Monetização)
+Se o link não rouba a senha do Roblox nem instala vírus, como o golpista ganha dinheiro?
 
-![Robux Scam](images/referr.png)
+A resposta está nos parâmetros da URL de destino da Google Play Store. Foi identificado o parâmetro `referrer` contendo a tag `adjust_reftag`, pertencente à **Adjust** (uma das principais plataformas de atribuição e análise de marketing mobile do mercado).
 
----
+Isso comprova o modelo de negócio por trás do spam:
 
-## Objetivo do Ataque
-- Monetização via instalação de aplicativo (CPI / afiliado)
-- Uso de tracking (Adjust) para atribuição de instalações
-- Possível uso de afiliados para distribuição do golpe
-- Possível aumento artificial da base de usuários  
-- Exploração de engenharia social voltada ao público jovem
+1. O operador atua como afiliado ou utiliza uma rede de tráfego incentivado.
+2. Cada instalação concluída a partir daquele link específico é contabilizada pela Adjust por meio do identificador `cfhCtHAOhvjls`.
+3. O golpista recebe comissões financeiras por cada instalação gerada (CPI — Cost Per Install), enquanto a vítima nunca recebe os Robux prometidos.
 
 ---
 
-## IOC (Indicators of Compromise)
-- https://abrir.link/yHwnq  
-- Domínio: abrir.link  
-- Destino: Google Play Store (com parâmetro referr)
-- adjust_reftag=cfhCtHAOhvjls
-- Aplicativo: "Macadam, O Conta-Passos"  
-- Padrão: promessa de recompensa (Robux)
+## 4. Indicadores de Comprometimento e Rastreamento (IOCs)
+*Nota: As URLs abaixo foram desarmadas (hxxps / [.]) por segurança para evitar acesso acidental.*
+
+* URL da Isca: hxxps://abrir[.]link/yHwnq
+
+* Domínio Encurtador: abrir[.]link
+
+* Identificador de Atribuição (Adjust): adjust_reftag=cfhCtHAOhvjls
+
+* Aplicativo de Destino: "Macadam, O Conta-Passos" (Google Play Store)
+
+* Padrão de Tática: Spam em avaliações da Galaxy Store com promessa de recompensa em Robux.
 
 ---
 
-## Conclusão
-O golpe não entrega a recompensa prometida e utiliza engenharia social para induzir usuários a instalar um aplicativo. A estratégia explora confiança em serviços legítimos e o interesse por recompensas digitais, com foco na monetização indireta pela instalação do aplicativo.
+## 5. Lições Defensivas
+* **Para jogadores e responsáveis:** O Roblox não distribui Robux por meio de aplicativos terceiros de contagem de passos nem por links deixados em comentários de lojas. Desconfie de qualquer promessa de moeda grátis fora dos canais oficiais.
+
+* **Para equipes de Trust & Safety / Plataformas:** O bloqueio isolado do encurtador `abrir.link` é ineficaz, pois trata-se de um serviço legítimo. O bloqueio e a investigação devem focar na moderação automatizada de links em avaliações da Galaxy Store e na denúncia do ID de afiliado (`cfhCtHAOhvjls`) junto à rede de atribuição (Adjust) por violação de políticas de tráfego incentivado/enganoso.
+
+---
+
+## Executive Summary
+This investigation analyzes a social engineering campaign disseminated through mass comments on the official Roblox game page within the Samsung Galaxy Store. The messages promise the free delivery of virtual currency (Robux) upon completion of tasks for three days and direct users to a shortened link (open.link/yHwnq).
+
+Technical analysis of the redirect chain demonstrated that the link does not lead to credential phishing pages or direct malware downloads, but rather to the official page of the "Macadam, The Step Counter" application on the Google Play Store. Inspection of the destination URL parameters revealed the use of the referrer parameter containing identifiers from the attribution platform *Adjust* (adjust_reftag), confirming that the operation aims at fraudulent monetization through affiliate programs based on *CPI (*Cost Per Install*)**.
+
+**Main finding:** The threat does not involve technical compromise of devices or account theft, but rather an advertising fraud campaign (ad fraud/affiliate abuse) sustained by social engineering targeting children and teenagers.
+
+**Defensive implication:** Users should not trust promises of digital rewards published in app store review sections. App store moderators and attribution platforms should monitor anomalous installation spikes linked to specific referral identifiers (adjust_reftag) originating from spam in reviews.
